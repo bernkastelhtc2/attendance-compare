@@ -7,56 +7,57 @@
 <style>
 :root{
   --ink:#14202b; --muted:#5e6a75; --line:#e3e8ee;
-  --bg:#f4f7fb; --card:#ffffff;
-  --navy:#16324f; --teal:#1f7a6b; --amber:#c47a1a; --rose:#b23a48;
-  --soft:#eef3f8;
+  --bg:#eef2f6; --card:#ffffff;
+  --navy:#16324f; --teal:#1f7a6b; --rose:#b23a48; --amber:#c47a1a;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang HK","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
-header{background:var(--navy);color:#fff;padding:28px 40px 24px}
-.k{color:#f0c36a;font-size:14px;letter-spacing:.12em}
-h1{margin:6px 0 4px;font-size:34px;font-weight:700}
-header p{margin:0;color:#d5deE8;font-size:16px}
-.wrap{max-width:1240px;margin:0 auto;padding:22px 28px 56px}
-.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:6px 0 18px}
+header{background:var(--navy);color:#fff;padding:26px 36px 22px}
+.k{color:#f0c36a;font-size:13px;letter-spacing:.14em}
+h1{margin:6px 0 4px;font-size:32px}
+header p{margin:0;color:#d5dee8;font-size:15px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 48px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 16px}
 .seg,.months{display:flex;gap:8px;flex-wrap:wrap}
 .seg{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-.seg button,.months button{border:0;background:#fff;padding:10px 16px;cursor:pointer;font-size:16px;color:var(--navy);font-family:inherit;border-radius:10px}
-.seg button{border-radius:0}
+.seg button,.months button{border:0;background:#fff;padding:10px 16px;cursor:pointer;font-size:15px;color:var(--navy);font-family:inherit}
+.months button{border:1px solid var(--line);border-radius:12px}
 .seg button.active,.months button.active{background:var(--navy);color:#fff}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
-.card{background:var(--card);border-radius:16px;padding:18px 18px 16px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(20,32,43,.04)}
-.card .label{font-size:15px;color:var(--muted);font-weight:600}
-.card .value{font-size:40px;font-weight:750;color:var(--navy);margin:6px 0 2px;letter-spacing:-.02em}
-.card .sub{font-size:13px;color:var(--muted)}
-.delta{display:inline-block;margin-top:8px;font-size:15px;font-weight:700;padding:3px 8px;border-radius:999px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:16px;padding:16px 18px;border:1px solid var(--line)}
+.kpi .label{font-size:14px;color:var(--muted);font-weight:600}
+.kpi .value{font-size:36px;font-weight:750;color:var(--navy);margin:4px 0 2px}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.delta{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;padding:3px 8px;border-radius:999px}
 .delta.up{color:var(--teal);background:#e7f6f2}
 .delta.down{color:var(--rose);background:#fdecee}
-.delta.flat{color:var(--muted);background:var(--soft)}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:16px}
-.panel h2{margin:0 0 12px;font-size:20px;color:var(--navy)}
-.legend{display:flex;gap:18px;font-size:14px;color:var(--muted);margin-bottom:10px}
-.sw{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px}
-table{width:100%;border-collapse:collapse;font-size:16px}
-th,td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--line)}
-th{background:var(--navy);color:#fff;font-weight:600;cursor:pointer;font-size:15px}
-th:first-child,td:first-child{text-align:left;padding-left:12px}
-tr:nth-child(even) td{background:#f8fafc}
-td.bad{color:var(--rose);font-weight:700;background:#fdecee!important}
-.bar-row{display:grid;grid-template-columns:56px 1fr 86px 86px;gap:10px;align-items:center;margin:8px 0}
-.bars{position:relative;height:34px}
-.bar{position:absolute;left:0;height:14px;border-radius:4px}
-.bar.a{top:1px;background:var(--navy)}
-.bar.b{top:18px;background:#e0a14a}
-.note{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.5}
-@media(max-width:860px){.cards{grid-template-columns:1fr 1fr}header, .wrap{padding-left:16px;padding-right:16px}h1{font-size:28px}}
+.delta.flat{color:var(--muted);background:#eef3f8}
+.section{margin:8px 0 18px}
+.section h2{margin:0 0 10px;font-size:18px;color:var(--navy)}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.grid.forms{grid-template-columns:repeat(6,1fr)}
+.grid.classes{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;min-height:132px}
+.card.warn{border-color:#f0c4c8;background:#fff8f8}
+.card .name{font-size:18px;font-weight:700;color:var(--navy)}
+.card .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
+.metric span{font-size:13px;color:var(--muted)}
+.metric b{font-size:20px;color:var(--ink)}
+.metric b.bad{color:var(--rose)}
+.bar{height:6px;background:#e8eef4;border-radius:99px;margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--navy);border-radius:99px}
+.bar.on i{background:#e0a14a}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+@media(max-width:1100px){.kpis,.grid.forms{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpis,.grid.forms{grid-template-columns:1fr 1fr}header,.wrap{padding-left:14px;padding-right:14px}}
 </style>
 </head>
 <body>
 <header>
   <div class="k">明愛聖若瑟中學 · 教務簡報</div>
   <h1>出席率及準時率</h1>
-  <p>按班別比較各月情況。點欄位可排序，比較模式會顯示差額。</p>
+  <p>卡片式總覽。比較模式會在每張卡顯示差額。</p>
 </header>
 <div class="wrap">
   <div class="toolbar">
@@ -64,28 +65,33 @@ td.bad{color:var(--rose);font-weight:700;background:#fdecee!important}
     <div class="months" id="months"></div>
     <div class="months" id="monthsB" style="display:none"></div>
   </div>
-  <div class="cards" id="cards"></div>
-  <div class="panel"><h2>各級比較</h2><div class="legend" id="legend"></div><div id="formChart"></div></div>
-  <div class="panel"><h2>各班一覽</h2><div id="table"></div><div class="note" id="note"></div></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="section"><h2>各級</h2><div class="grid forms" id="forms"></div></div>
+  <div class="section"><h2>各班</h2><div class="grid classes" id="classes"></div><div class="note" id="note"></div></div>
 </div>
 <script>
 const DATA={"2026-09":{label:"2026年9月",days:null,students:418,school:{att:94.29,on:97.37,both:91.81,late:228,severe:23},classes:{"1A":{n:21,att:89.83,on:94.46,both:84.85,late:20,severe:3},"1B":{n:24,att:94.40,on:97.08,both:91.65,late:11,severe:4},"1C":{n:16,att:93.89,on:96.07,both:90.20,late:9,severe:4},"2A":{n:18,att:88.89,on:99.43,both:88.38,late:2,severe:0},"2B":{n:26,att:92.20,on:98.01,both:90.37,late:7,severe:3},"2C":{n:28,att:96.92,on:97.65,both:94.64,late:13,severe:1},"3A":{n:31,att:91.72,on:96.80,both:88.78,late:19,severe:1},"3B":{n:33,att:94.80,on:99.57,both:94.39,late:3,severe:0},"3C":{n:31,att:93.77,on:97.03,both:90.98,late:17,severe:2},"4A":{n:32,att:95.66,on:96.69,both:92.49,late:21,severe:2},"4B":{n:29,att:93.36,on:96.32,both:89.92,late:20,severe:2},"4C":{n:29,att:98.12,on:96.96,both:95.14,late:19,severe:0},"5A":{n:26,att:95.29,on:98.29,both:93.66,late:9,severe:0},"5B":{n:23,att:92.09,on:97.64,both:89.92,late:11,severe:0},"6A":{n:23,att:98.91,on:98.00,both:96.94,late:9,severe:1},"6B":{n:13,att:95.45,on:95.97,both:91.61,late:11,severe:0},"6C":{n:15,att:96.06,on:98.74,both:94.85,late:4,severe:0}}},"2026-10":{label:"2026年10月",days:23,students:412,school:{att:93.84,on:99.09,both:92.99,late:161,severe:38},classes:{"1A":{n:21,att:90.27,on:99.20,both:89.54,late:7,severe:4},"1B":{n:22,att:97.92,on:99.60,both:97.53,late:4,severe:0},"1C":{n:16,att:94.29,on:99.28,both:93.61,late:5,severe:2},"2A":{n:18,att:87.56,on:99.59,both:87.20,late:3,severe:1},"2B":{n:26,att:96.32,on:99.22,both:95.57,late:9,severe:2},"2C":{n:28,att:94.57,on:99.67,both:94.25,late:4,severe:1},"3A":{n:31,att:87.87,on:99.28,both:87.24,late:9,severe:2},"3B":{n:32,att:95.58,on:99.36,both:94.97,late:9,severe:4},"3C":{n:31,att:92.08,on:98.86,both:91.02,late:15,severe:3},"4A":{n:31,att:92.99,on:97.36,both:90.53,late:35,severe:8},"4B":{n:28,att:94.95,on:98.86,both:93.87,late:14,severe:3},"4C":{n:29,att:97.30,on:99.38,both:96.70,late:8,severe:1},"5A":{n:25,att:97.13,on:98.84,both:96.00,late:13,severe:1},"5B":{n:23,att:91.87,on:99.07,both:91.02,late:9,severe:1},"6A":{n:23,att:98.11,on:99.61,both:97.73,late:4,severe:1},"6B":{n:13,att:93.81,on:98.93,both:92.81,late:6,severe:0},"6C":{n:15,att:90.43,on:98.88,both:89.42,late:7,severe:4}}}};
 const KEYS=Object.keys(DATA);
 const CLASSES=Object.keys(DATA[KEYS[0]].classes);
-let mode="single", monthA=KEYS[KEYS.length-1], monthB=KEYS[KEYS.length-2]||KEYS[0], sortKey="cls", sortDir=1;
+let mode="single", monthA=KEYS[KEYS.length-1], monthB=KEYS[KEYS.length-2]||KEYS[0];
 function formOf(c){return c[0]}
 function formAgg(month){
   const out={};
   for(const [cls,d] of Object.entries(DATA[month].classes)){
     const f=formOf(cls);
-    if(!out[f]) out[f]={n:0,attN:0,onN:0,bothN:0,late:0,severe:0};
-    out[f].n+=d.n; out[f].attN+=d.att*d.n; out[f].onN+=d.on*d.n; out[f].bothN+=d.both*d.n; out[f].late+=d.late; out[f].severe+=d.severe;
+    if(!out[f]) out[f]={n:0,attN:0,onN:0,late:0};
+    out[f].n+=d.n; out[f].attN+=d.att*d.n; out[f].onN+=d.on*d.n; out[f].late+=d.late;
   }
-  for(const f of Object.keys(out)){const g=out[f]; g.att=g.attN/g.n; g.on=g.onN/g.n; g.both=g.bothN/g.n}
+  for(const f of Object.keys(out)){const g=out[f]; g.att=g.attN/g.n; g.on=g.onN/g.n}
   return out;
 }
-function delta(a,b){const d=a-b; const c=d>0.05?"up":d<-0.05?"down":"flat"; return `<div class="delta ${c}">${d>0?"▲ +":d<-0.05?"▼ ":""}${d.toFixed(2)}</div>`}
-function deltaCount(a,b){const d=a-b; const c=d<0?"up":d>0?"down":"flat"; return `<div class="delta ${c}">${d<0?"▲ ":d>0?"▼ +":""}${d}</div>`}
+function pill(a,b,invert){
+  const d=a-b;
+  if(Math.abs(d)<0.05 && !invert) return `<div class="delta flat">持平</div>`;
+  if(invert){ const c=d<0?"up":d>0?"down":"flat"; return `<div class="delta ${c}">${d<0?"▲ ":d>0?"▼ +":""}${d}</div>`; }
+  const c=d>0?"up":"down";
+  return `<div class="delta ${c}">${d>0?"▲ +":"▼ "}${d.toFixed(2)}</div>`;
+}
 function renderMonths(){
   const box=document.getElementById("months"), boxB=document.getElementById("monthsB");
   box.innerHTML=KEYS.map(k=>`<button data-m="${k}" class="${k===monthA?"active":""}">${DATA[k].label}</button>`).join("");
@@ -100,50 +106,45 @@ document.getElementById("mode").onclick=e=>{
   document.querySelectorAll("#mode button").forEach(b=>b.classList.toggle("active", b.dataset.mode===mode));
   render();
 };
-function renderCards(){
+function renderKpis(){
   const A=DATA[monthA].school, B=DATA[monthB].school;
   const items=[["出席率",A.att,B.att,"%",false],["準時率",A.on,B.on,"%",false],["出席並準時",A.both,B.both,"%",false],["遲到次數",A.late,B.late,"",true]];
-  document.getElementById("cards").innerHTML=items.map((it)=>{
+  document.getElementById("kpis").innerHTML=items.map(it=>{
     const [label,a,b,unit,invert]=it;
-    const extra=mode==="compare"?(invert?deltaCount(a,b):delta(a,b)):"";
-    return `<div class="card"><div class="label">${label}${mode==="compare"?` · ${DATA[monthA].label}`:""}</div><div class="value">${a.toFixed(unit==="%"?2:0)}${unit}</div><div class="sub">${DATA[monthA].students} 人${DATA[monthA].days?` · ${DATA[monthA].days} 個上課日`:""}</div>${extra}</div>`;
+    const extra=mode==="compare"?pill(a,b,invert):"";
+    return `<div class="kpi"><div class="label">${label}${mode==="compare"?` · ${DATA[monthA].label}`:""}</div><div class="value">${a.toFixed(unit==="%"?2:0)}${unit}</div><div class="sub">${DATA[monthA].students} 人${DATA[monthA].days?` · ${DATA[monthA].days} 個上課日`:""}</div>${extra}</div>`;
   }).join("");
+}
+function card(name, meta, att, on, late, severe, warn, dAtt, dOn){
+  return `<div class="card ${warn?"warn":""}">
+    <div class="name">${name}</div>
+    <div class="meta">${meta}</div>
+    <div class="metric"><span>出席率</span><b class="${att<92?"bad":""}">${att.toFixed(2)}%</b></div>
+    <div class="bar"><i style="width:${att}%"></i></div>
+    <div class="metric"><span>準時率</span><b class="${on<98?"bad":""}">${on.toFixed(2)}%</b></div>
+    <div class="bar on"><i style="width:${on}%"></i></div>
+    <div class="metric"><span>遲到 / 嚴重</span><b>${late} / ${severe||0}</b></div>
+    ${mode==="compare"?`<div class="meta">出席 ${dAtt>0?"+":""}${dAtt.toFixed(2)}　準時 ${dOn>0?"+":""}${dOn.toFixed(2)}</div>`:""}
+  </div>`;
 }
 function renderForms(){
-  const FA=formAgg(monthA), FB=formAgg(monthB), forms=["1","2","3","4","5","6"];
-  document.getElementById("legend").innerHTML=mode==="compare"
-    ?`<span><i class="sw" style="background:var(--navy)"></i>${DATA[monthA].label} 出席率</span><span><i class="sw" style="background:#e0a14a"></i>${DATA[monthB].label} 出席率</span>`
-    :`<span><i class="sw" style="background:var(--navy)"></i>出席率</span><span><i class="sw" style="background:#e0a14a"></i>準時率</span>`;
-  document.getElementById("formChart").innerHTML=forms.map(f=>{
+  const FA=formAgg(monthA), FB=formAgg(monthB);
+  document.getElementById("forms").innerHTML=["1","2","3","4","5","6"].map(f=>{
     const a=FA[f], b=FB[f];
-    if(mode==="compare") return `<div class="bar-row"><div>中${["","一","二","三","四","五","六"][f]}</div><div class="bars"><div class="bar a" style="width:${a.att}%"></div><div class="bar b" style="width:${b.att}%"></div></div><div>${a.att.toFixed(2)}%</div><div>${b.att.toFixed(2)}%</div></div>`;
-    return `<div class="bar-row"><div>中${["","一","二","三","四","五","六"][f]}</div><div class="bars"><div class="bar a" style="width:${a.att}%"></div><div class="bar b" style="width:${a.on}%"></div></div><div>${a.att.toFixed(2)}%</div><div>${a.on.toFixed(2)}%</div></div>`;
+    return card("中"+["","一","二","三","四","五","六"][f], a.n+" 人", a.att, a.on, a.late, 0, a.att<92, a.att-b.att, a.on-b.on);
   }).join("");
 }
-function renderTable(){
+function renderClasses(){
   const A=DATA[monthA].classes, B=DATA[monthB].classes;
-  let rows=CLASSES.map(cls=>({cls,a:A[cls],b:B[cls]}));
-  const val=r=>sortKey==="cls"?r.cls:sortKey==="dAtt"?r.a.att-r.b.att:sortKey==="dOn"?r.a.on-r.b.on:r.a[sortKey];
-  rows.sort((x,y)=>{const vx=val(x),vy=val(y); return typeof vx==="string"?vx.localeCompare(vy)*sortDir:(vx-vy)*sortDir});
-  const heads=mode==="compare"?[["cls","班別"],["n","人數"],["att","出席率"],["dAtt","出席差"],["on","準時率"],["dOn","準時差"],["late","遲到"],["severe","嚴重"]]:[["cls","班別"],["n","人數"],["att","出席率"],["on","準時率"],["both","出席並準時"],["late","遲到"],["severe","嚴重"]];
-  let html=`<table><thead><tr>${heads.map(([k,t])=>`<th data-k="${k}">${t}</th>`).join("")}</tr></thead><tbody>`;
-  for(const r of rows){
-    const lowAtt=r.a.att<92, lowOn=r.a.on<98;
-    if(mode==="compare"){
-      const da=r.a.att-r.b.att, dn=r.a.on-r.b.on;
-      html+=`<tr><td>${r.cls}</td><td>${r.a.n}</td><td class="${lowAtt?"bad":""}">${r.a.att.toFixed(2)}%</td><td class="${da<-1?"bad":""}">${da>0?"+":""}${da.toFixed(2)}</td><td class="${lowOn?"bad":""}">${r.a.on.toFixed(2)}%</td><td class="${dn<-1?"bad":""}">${dn>0?"+":""}${dn.toFixed(2)}</td><td class="${r.a.late>=15?"bad":""}">${r.a.late}</td><td class="${r.a.severe>=4?"bad":""}">${r.a.severe}</td></tr>`;
-    } else {
-      html+=`<tr><td>${r.cls}</td><td>${r.a.n}</td><td class="${lowAtt?"bad":""}">${r.a.att.toFixed(2)}%</td><td class="${lowOn?"bad":""}">${r.a.on.toFixed(2)}%</td><td class="${r.a.both<90?"bad":""}">${r.a.both.toFixed(2)}%</td><td class="${r.a.late>=15?"bad":""}">${r.a.late}</td><td class="${r.a.severe>=4?"bad":""}">${r.a.severe}</td></tr>`;
-    }
-  }
-  html+="</tbody></table>";
-  document.getElementById("table").innerHTML=html;
-  document.querySelectorAll("#table th").forEach(th=>th.onclick=()=>{const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=k==="cls"?1:-1} renderTable()});
+  document.getElementById("classes").innerHTML=CLASSES.map(cls=>{
+    const a=A[cls], b=B[cls];
+    return card(cls, a.n+" 人", a.att, a.on, a.late, a.severe, a.att<92||a.on<98, a.att-b.att, a.on-b.on);
+  }).join("");
   document.getElementById("note").textContent=mode==="compare"
-    ?`正在比較 ${DATA[monthA].label} 與 ${DATA[monthB].label}。差額 = 前者 − 後者。綠色為改善，紅色為回落。出席率低於 92% 或準時率低於 98% 已標色。`
+    ?`正在比較 ${DATA[monthA].label} 與 ${DATA[monthB].label}。差額 = 前者 − 後者。出席率低於 92% 或準時率低於 98% 的卡片已標紅。`
     :"出席率 = 出席 ÷ 應到。準時率 = 已出席學生中準時到達的比例。嚴重遲到已包含在遲到之內。";
 }
-function render(){renderMonths(); renderCards(); renderForms(); renderTable()}
+function render(){renderMonths(); renderKpis(); renderForms(); renderClasses()}
 render();
 </script>
 </body>
