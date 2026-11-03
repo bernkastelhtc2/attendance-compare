@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>出席率及準時率 · 明愛聖若瑟中學</title>
+<style>
+:root{
+  --ink:#1a2332; --muted:#6b7280; --line:#e6e2d8;
+  --bg:#f6f3ee; --card:#ffffff;
+  --navy:#1e3a4c; --gold:#b08958; --teal:#2c6e63; --rose:#9b3d45;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"PingFang HK","Noto Sans CJK TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(180deg,#1b3344 0%,#1e3a4c 100%);color:#fff;padding:28px 40px 26px;border-bottom:4px solid var(--gold)}
+.k{color:var(--gold);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+h1{margin:8px 0 6px;font-size:34px;font-weight:700;letter-spacing:.01em}
+header p{margin:0;color:#d8d0c4;font-size:15px}
+.wrap{max-width:1220px;margin:0 auto;padding:22px 28px 56px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 18px}
+.seg,.months{display:flex;gap:8px;flex-wrap:wrap}
+.seg{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(30,58,76,.04)}
+.seg button,.months button{border:0;background:#fff;padding:10px 16px;cursor:pointer;font-size:15px;color:var(--navy);font-family:inherit}
+.months button{border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(30,58,76,.04)}
+.seg button.active,.months button.active{background:var(--navy);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border-radius:18px;padding:18px 18px 16px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(30,58,76,.05);position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy)}
+.kpi:nth-child(2):before{background:var(--teal)}
+.kpi:nth-child(3):before{background:var(--gold)}
+.kpi:nth-child(4):before{background:var(--rose)}
+.kpi .label{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.kpi .value{font-size:38px;font-weight:700;color:var(--navy);margin:6px 0 2px;letter-spacing:-.02em}
+.kpi .sub{font-size:13px;color:var(--muted)}
+.delta{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;padding:4px 9px;border-radius:999px}
+.delta.up{color:var(--teal);background:#e8f4f1}
+.delta.down{color:var(--rose);background:#fbecee}
+.delta.flat{color:var(--muted);background:#f3f1ec}
+.section{margin:6px 0 20px}
+.section h2{margin:0 0 12px;font-size:16px;color:var(--navy);letter-spacing:.08em;font-weight:700}
+.grid{display:grid;gap:12px}
+.grid.forms{grid-template-columns:repeat(6,1fr)}
+.grid.classes{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;box-shadow:0 4px 14px rgba(30,58,76,.04);min-height:148px}
+.card.warn{border-color:#ead3d0;background:#fffaf9}
+.card .name{font-size:18px;font-weight:700;color:var(--navy)}
+.card .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.metric span{font-size:12px;color:var(--muted)}
+.metric b{font-size:18px;color:var(--ink);font-weight:700}
+.metric b.bad{color:var(--rose)}
+.bar{height:5px;background:#efeae2;border-radius:99px;margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--navy);border-radius:99px}
+.bar.on i{background:var(--gold)}
+.note{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
+@media(max-width:1100px){.kpis,.grid.forms{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpis,.grid.forms{grid-template-columns:1fr 1fr}header,.wrap{padding-left:16px;padding-right:16px}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="k">Caritas St. Joseph Secondary School</div>
+  <h1>出席率及準時率</h1>
+  <p>教務簡報　·　卡片式總覽　·　可比較各月</p>
+</header>
+<div class="wrap">
+  <div class="toolbar">
+    <div class="seg" id="mode"><button data-mode="single" class="active">單月</button><button data-mode="compare">比較兩月</button></div>
+    <div class="months" id="months"></div>
+    <div class="months" id="monthsB" style="display:none"></div>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="section"><h2>各級</h2><div class="grid forms" id="forms"></div></div>
+  <div class="section"><h2>各班</h2><div class="grid classes" id="classes"></div><div class="note" id="note"></div></div>
+</div>
+<script>
+const DATA={"2026-09":{label:"2026年9月",days:null,students:418,school:{att:94.29,on:97.37,both:91.81,late:228,severe:23},classes:{"1A":{n:21,att:89.83,on:94.46,both:84.85,late:20,severe:3},"1B":{n:24,att:94.40,on:97.08,both:91.65,late:11,severe:4},"1C":{n:16,att:93.89,on:96.07,both:90.20,late:9,severe:4},"2A":{n:18,att:88.89,on:99.43,both:88.38,late:2,severe:0},"2B":{n:26,att:92.20,on:98.01,both:90.37,late:7,severe:3},"2C":{n:28,att:96.92,on:97.65,both:94.64,late:13,severe:1},"3A":{n:31,att:91.72,on:96.80,both:88.78,late:19,severe:1},"3B":{n:33,att:94.80,on:99.57,both:94.39,late:3,severe:0},"3C":{n:31,att:93.77,on:97.03,both:90.98,late:17,severe:2},"4A":{n:32,att:95.66,on:96.69,both:92.49,late:21,severe:2},"4B":{n:29,att:93.36,on:96.32,both:89.92,late:20,severe:2},"4C":{n:29,att:98.12,on:96.96,both:95.14,late:19,severe:0},"5A":{n:26,att:95.29,on:98.29,both:93.66,late:9,severe:0},"5B":{n:23,att:92.09,on:97.64,both:89.92,late:11,severe:0},"6A":{n:23,att:98.91,on:98.00,both:96.94,late:9,severe:1},"6B":{n:13,att:95.45,on:95.97,both:91.61,late:11,severe:0},"6C":{n:15,att:96.06,on:98.74,both:94.85,late:4,severe:0}}},"2026-10":{label:"2026年10月",days:23,students:412,school:{att:93.84,on:99.09,both:92.99,late:161,severe:38},classes:{"1A":{n:21,att:90.27,on:99.20,both:89.54,late:7,severe:4},"1B":{n:22,att:97.92,on:99.60,both:97.53,late:4,severe:0},"1C":{n:16,att:94.29,on:99.28,both:93.61,late:5,severe:2},"2A":{n:18,att:87.56,on:99.59,both:87.20,late:3,severe:1},"2B":{n:26,att:96.32,on:99.22,both:95.57,late:9,severe:2},"2C":{n:28,att:94.57,on:99.67,both:94.25,late:4,severe:1},"3A":{n:31,att:87.87,on:99.28,both:87.24,late:9,severe:2},"3B":{n:32,att:95.58,on:99.36,both:94.97,late:9,severe:4},"3C":{n:31,att:92.08,on:98.86,both:91.02,late:15,severe:3},"4A":{n:31,att:92.99,on:97.36,both:90.53,late:35,severe:8},"4B":{n:28,att:94.95,on:98.86,both:93.87,late:14,severe:3},"4C":{n:29,att:97.30,on:99.38,both:96.70,late:8,severe:1},"5A":{n:25,att:97.13,on:98.84,both:96.00,late:13,severe:1},"5B":{n:23,att:91.87,on:99.07,both:91.02,late:9,severe:1},"6A":{n:23,att:98.11,on:99.61,both:97.73,late:4,severe:1},"6B":{n:13,att:93.81,on:98.93,both:92.81,late:6,severe:0},"6C":{n:15,att:90.43,on:98.88,both:89.42,late:7,severe:4}}}};
+const KEYS=Object.keys(DATA);
+const CLASSES=Object.keys(DATA[KEYS[0]].classes);
+let mode="single", monthA=KEYS[KEYS.length-1], monthB=KEYS[KEYS.length-2]||KEYS[0];
+function formOf(c){return c[0]}
+function formAgg(month){
+  const out={};
+  for(const [cls,d] of Object.entries(DATA[month].classes)){
+    const f=formOf(cls);
+    if(!out[f]) out[f]={n:0,attN:0,onN:0,late:0};
+    out[f].n+=d.n; out[f].attN+=d.att*d.n; out[f].onN+=d.on*d.n; out[f].late+=d.late;
+  }
+  for(const f of Object.keys(out)){const g=out[f]; g.att=g.attN/g.n; g.on=g.onN/g.n}
+  return out;
+}
+function pill(a,b,invert){
+  const d=a-b;
+  if(Math.abs(d)<0.05 && !invert) return `<div class="delta flat">持平</div>`;
+  if(invert){ const c=d<0?"up":d>0?"down":"flat"; return `<div class="delta ${c}">${d<0?"▲ ":d>0?"▼ +":""}${d}</div>`; }
+  const c=d>0?"up":"down";
+  return `<div class="delta ${c}">${d>0?"▲ +":"▼ "}${d.toFixed(2)}</div>`;
+}
+function renderMonths(){
+  const box=document.getElementById("months"), boxB=document.getElementById("monthsB");
+  box.innerHTML=KEYS.map(k=>`<button data-m="${k}" class="${k===monthA?"active":""}">${DATA[k].label}</button>`).join("");
+  boxB.innerHTML=KEYS.map(k=>`<button data-m="${k}" class="${k===monthB?"active":""}">對比 ${DATA[k].label}</button>`).join("");
+  boxB.style.display=mode==="compare"?"flex":"none";
+  box.querySelectorAll("button").forEach(b=>b.onclick=()=>{monthA=b.dataset.m; render()});
+  boxB.querySelectorAll("button").forEach(b=>b.onclick=()=>{monthB=b.dataset.m; render()});
+}
+document.getElementById("mode").onclick=e=>{
+  if(!e.target.dataset.mode) return;
+  mode=e.target.dataset.mode;
+  document.querySelectorAll("#mode button").forEach(b=>b.classList.toggle("active", b.dataset.mode===mode));
+  render();
+};
+function renderKpis(){
+  const A=DATA[monthA].school, B=DATA[monthB].school;
+  const items=[["出席率",A.att,B.att,"%",false],["準時率",A.on,B.on,"%",false],["出席並準時",A.both,B.both,"%",false],["遲到次數",A.late,B.late,"",true]];
+  document.getElementById("kpis").innerHTML=items.map(it=>{
+    const [label,a,b,unit,invert]=it;
+    const extra=mode==="compare"?pill(a,b,invert):"";
+    return `<div class="kpi"><div class="label">${label}${mode==="compare"?` · ${DATA[monthA].label}`:""}</div><div class="value">${a.toFixed(unit==="%"?2:0)}${unit}</div><div class="sub">${DATA[monthA].students} 人${DATA[monthA].days?` · ${DATA[monthA].days} 個上課日`:""}</div>${extra}</div>`;
+  }).join("");
+}
+function card(name, meta, att, on, late, severe, warn, dAtt, dOn){
+  return `<div class="card ${warn?"warn":""}">
+    <div class="name">${name}</div>
+    <div class="meta">${meta}</div>
+    <div class="metric"><span>出席率</span><b class="${att<92?"bad":""}">${att.toFixed(2)}%</b></div>
+    <div class="bar"><i style="width:${att}%"></i></div>
+    <div class="metric"><span>準時率</span><b class="${on<98?"bad":""}">${on.toFixed(2)}%</b></div>
+    <div class="bar on"><i style="width:${on}%"></i></div>
+    <div class="metric"><span>遲到 / 嚴重</span><b>${late} / ${severe||0}</b></div>
+    ${mode==="compare"?`<div class="meta">出席 ${dAtt>0?"+":""}${dAtt.toFixed(2)}　準時 ${dOn>0?"+":""}${dOn.toFixed(2)}</div>`:""}
+  </div>`;
+}
+function renderForms(){
+  const FA=formAgg(monthA), FB=formAgg(monthB);
+  document.getElementById("forms").innerHTML=["1","2","3","4","5","6"].map(f=>{
+    const a=FA[f], b=FB[f];
+    return card("中"+["","一","二","三","四","五","六"][f], a.n+" 人", a.att, a.on, a.late, 0, a.att<92, a.att-b.att, a.on-b.on);
+  }).join("");
+}
+function renderClasses(){
+  const A=DATA[monthA].classes, B=DATA[monthB].classes;
+  document.getElementById("classes").innerHTML=CLASSES.map(cls=>{
+    const a=A[cls], b=B[cls];
+    return card(cls, a.n+" 人", a.att, a.on, a.late, a.severe, a.att<92||a.on<98, a.att-b.att, a.on-b.on);
+  }).join("");
+  document.getElementById("note").textContent=mode==="compare"
+    ?`正在比較 ${DATA[monthA].label} 與 ${DATA[monthB].label}。差額 = 前者 − 後者。出席率低於 92% 或準時率低於 98% 的卡片已標出。`
+    :"出席率 = 出席 ÷ 應到。準時率 = 已出席學生中準時到達的比例。嚴重遲到已包含在遲到之內。";
+}
+function render(){renderMonths(); renderKpis(); renderForms(); renderClasses()}
+render();
+</script>
+</body>
+</html>
