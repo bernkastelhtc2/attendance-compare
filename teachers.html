@@ -63,7 +63,6 @@ th{background:var(--navy);color:#fff}
   </div>
 </div>
 <script>
-let DATA=null;
 const KEY="CSJ2026";
 const lock=document.getElementById("lock");
 const app=document.getElementById("app");
@@ -77,31 +76,34 @@ document.getElementById("pw").onkeydown=e=>{if(e.key==="Enter")unlock();};
 document.getElementById("out").onclick=()=>{sessionStorage.removeItem("csj_ok");location.reload();};
 if(sessionStorage.getItem("csj_ok")==="1"){lock.classList.add("hidden");app.classList.remove("hidden");load();}
 
-async function load(){
-  if(!DATA){
-    const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/teacher-data.json");
-    DATA=await r.json();
-  }
-  init();
-}
+async function load(){ init(); }
 function init(){
-  const classes=[...new Set(DATA.roster.map(s=>s.cls))];
+  const classes=["1A","1B","1C","2A","2B","2C","3A","3B","3C","4A","4B","4C","5A","5B","6A","6B","6C"];
   const sel=document.getElementById("cls");
   sel.innerHTML=classes.map(c=>`<option>${c}</option>`).join("");
   sel.onchange=renderList;
   document.getElementById("q").oninput=renderList;
   renderList();
 }
-function renderList(){
+const cache={};
+async function getClass(cls){
+  if(!cache[cls]){
+    const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/cls/"+cls+".json");
+    cache[cls]=await r.json();
+  }
+  return cache[cls];
+}
+async function renderList(){
   const cls=document.getElementById("cls").value;
   const q=document.getElementById("q").value.trim().toLowerCase();
-  const students=DATA.roster.filter(s=>s.cls===cls).sort((a,b)=>a.no-b.no);
+  const data=await getClass(cls);
+  const students=data.roster.slice().sort((a,b)=>a.no-b.no);
   const filtered=students.filter(s=>{
     const name=(s.cn+" "+s.en+" "+s.no).toLowerCase();
     return !q || name.includes(q);
   });
   document.getElementById("list").innerHTML=filtered.map(s=>{
-    const recs=DATA.records.filter(r=>r.cls===s.cls && Number(r.no)===s.no);
+    const recs=data.records.filter(r=>Number(r.no)===s.no);
     const abs=recs.filter(r=>r.type.includes("缺席")).length;
     const late=recs.filter(r=>r.type.includes("遲到")).length;
     return `<div class="stu ${recs.length?"warn":""}" data-no="${s.no}">
@@ -112,14 +114,15 @@ function renderList(){
   document.querySelectorAll(".stu").forEach(el=>el.onclick=()=>show(cls, Number(el.dataset.no)));
   document.getElementById("detail").classList.add("hidden");
 }
-function show(cls,no){
-  const s=DATA.roster.find(x=>x.cls===cls && x.no===no);
-  const recs=DATA.records.filter(r=>r.cls===cls && Number(r.no)===no).sort((a,b)=>a.date.localeCompare(b.date));
+async function show(cls,no){
+  const data=await getClass(cls);
+  const s=data.roster.find(x=>x.no===no);
+  const recs=data.records.filter(r=>Number(r.no)===no).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
   const tag=t=>t.includes("缺席")?"abs":t.includes("遲到")?"late":"other";
   let rows=recs.length?recs.map(r=>`<tr>
-    <td>${r.date}</td><td>${r.session}</td>
+    <td>${r.date||""}</td><td>${r.session||""}</td>
     <td><span class="tag ${tag(r.type)}">${r.type}${r.severe==="是"?" · 嚴重":""}</span></td>
-    <td>${r.time||"—"}</td><td>${r.reason||"—"}</td><td>${r.note||"—"}</td><td>${r.exempt}</td>
+    <td>${r.time||"—"}</td><td>${r.reason||"—"}</td><td>${r.note||"—"}</td><td>${r.exempt||""}</td>
   </tr>`).join(""):`<tr><td colspan="7">本月沒有例外紀錄</td></tr>`;
   document.getElementById("detail").classList.remove("hidden");
   document.getElementById("detail").innerHTML=`<h3 style="margin:0 0 8px;color:var(--navy)">${cls} ${s.no}. ${s.cn||s.en}</h3>
