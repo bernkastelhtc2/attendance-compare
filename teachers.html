@@ -8,12 +8,10 @@
 :root{--ink:#1a2332;--muted:#6b7280;--line:#e6e2d8;--bg:#f6f3ee;--navy:#1e3a4c;--gold:#b08958;--teal:#2c6e63;--rose:#9b3d45}
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang HK","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
-header{background:linear-gradient(180deg,#1b3344,#1e3a4c);color:#fff;padding:22px 32px;border-bottom:4px solid var(--gold);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+header{background:linear-gradient(180deg,#1b3344,#1e3a4c);color:#fff;padding:22px 32px;border-bottom:4px solid var(--gold)}
 .k{color:var(--gold);font-size:12px;letter-spacing:.16em}
 h1{margin:6px 0 2px;font-size:28px}
 header p{margin:0;color:#d8d0c4;font-size:14px}
-.nav a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:8px 14px;border-radius:10px;font-size:14px}
-.nav a:hover{background:rgba(255,255,255,.1)}
 .wrap{max-width:1100px;margin:0 auto;padding:20px 22px 48px}
 .lock{max-width:420px;margin:48px auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 8px 24px rgba(30,58,76,.06)}
 .lock h2{margin:0 0 8px;color:var(--navy)}
@@ -41,12 +39,10 @@ th{background:var(--navy);color:#fff}
 </head>
 <body>
 <header>
-  <div>
-    <div class="k">CARITAS ST. JOSEPH SECONDARY SCHOOL</div>
-    <h1>個別紀錄查詢</h1>
-    <p>教師專用　·　按班別搜尋學生　·　十月例外紀錄</p>
-  </div>
-  <div class="nav"><a href="https://htmlpreview.github.io/?https://github.com/bernkastelhtc2/attendance-compare/blob/main/brief.html">← 回總覽</a></div>
+  <div class="k">CARITAS ST. JOSEPH SECONDARY SCHOOL</div>
+  <h1>個別紀錄查詢</h1>
+  <p><a href="index.html" style="color:#e3c27a;text-decoration:none">← 返回全校比較</a></p>
+  <p>教師專用　·　按班別及月份搜尋學生紀錄</p>
 </header>
 <div class="wrap">
   <div class="lock" id="lock">
@@ -59,6 +55,7 @@ th{background:var(--navy);color:#fff}
   </div>
   <div id="app" class="hidden">
     <div class="bar">
+      <select id="month"></select>
       <select id="cls"></select>
       <input id="q" placeholder="搜尋姓名或學號" style="min-width:200px"/>
       <button id="out">登出</button>
@@ -81,8 +78,14 @@ document.getElementById("pw").onkeydown=e=>{if(e.key==="Enter")unlock();};
 document.getElementById("out").onclick=()=>{sessionStorage.removeItem("csj_ok");location.reload();};
 if(sessionStorage.getItem("csj_ok")==="1"){lock.classList.add("hidden");app.classList.remove("hidden");load();}
 
-async function load(){ init(); }
+async function load(){
+  init();
+}
 function init(){
+  const months=[{v:"2026-10",l:"2026年10月"},{v:"2026-09",l:"2026年9月"}];
+  const msel=document.getElementById("month");
+  msel.innerHTML=months.map(m=>`<option value="${m.v}">${m.l}</option>`).join("");
+  msel.onchange=renderList;
   const classes=["1A","1B","1C","2A","2B","2C","3A","3B","3C","4A","4B","4C","5A","5B","6A","6B","6C"];
   const sel=document.getElementById("cls");
   sel.innerHTML=classes.map(c=>`<option>${c}</option>`).join("");
@@ -97,12 +100,15 @@ async function getClass(cls){
       const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/cls/"+cls+".json");
       if(!r.ok) throw new Error("missing");
       cache[cls]=await r.json();
-    }catch(e){ cache[cls]={roster:[], records:[]}; }
+    }catch(e){
+      cache[cls]={roster:[], records:[]};
+    }
   }
   return cache[cls];
 }
 async function renderList(){
   const cls=document.getElementById("cls").value;
+  const month=document.getElementById("month").value;
   const q=document.getElementById("q").value.trim().toLowerCase();
   const data=await getClass(cls);
   const students=data.roster.slice().sort((a,b)=>a.no-b.no);
@@ -111,21 +117,22 @@ async function renderList(){
     return !q || name.includes(q);
   });
   document.getElementById("list").innerHTML=filtered.map(s=>{
-    const recs=data.records.filter(r=>Number(r.no)===s.no);
+    const recs=data.records.filter(r=>Number(r.no)===s.no && (r.date||"").startsWith(month));
     const abs=recs.filter(r=>r.type.includes("缺席")).length;
     const late=recs.filter(r=>r.type.includes("遲到")).length;
     return `<div class="stu ${recs.length?"warn":""}" data-no="${s.no}">
       <div class="n">${s.no}. ${s.cn||s.en}</div>
       <div class="m">${s.en}　缺席 ${abs}　遲到 ${late}</div>
     </div>`;
-  }).join("") || "<div class=\"note\">此班資料暫未上傳</div>";
+  }).join("");
   document.querySelectorAll(".stu").forEach(el=>el.onclick=()=>show(cls, Number(el.dataset.no)));
   document.getElementById("detail").classList.add("hidden");
 }
 async function show(cls,no){
+  const month=document.getElementById("month").value;
   const data=await getClass(cls);
   const s=data.roster.find(x=>x.no===no);
-  const recs=data.records.filter(r=>Number(r.no)===no).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  const recs=data.records.filter(r=>Number(r.no)===no && (r.date||"").startsWith(month)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
   const tag=t=>t.includes("缺席")?"abs":t.includes("遲到")?"late":"other";
   let rows=recs.length?recs.map(r=>`<tr>
     <td>${r.date||""}</td><td>${r.session||""}</td>
