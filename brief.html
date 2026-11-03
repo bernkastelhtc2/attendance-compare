@@ -5,17 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>出席率及準時率 · 明愛聖若瑟中學</title>
 <style>
-:root{
-  --ink:#1a2332; --muted:#6b7280; --line:#e6e2d8;
-  --bg:#f6f3ee; --card:#ffffff;
-  --navy:#1e3a4c; --gold:#b08958; --teal:#2c6e63; --rose:#9b3d45;
-}
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e6e2d8;--bg:#f6f3ee;--card:#ffffff;--navy:#1e3a4c;--gold:#b08958;--teal:#2c6e63;--rose:#9b3d45}
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang HK","Noto Sans CJK TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
-header{background:linear-gradient(180deg,#1b3344 0%,#1e3a4c 100%);color:#fff;padding:28px 40px 26px;border-bottom:4px solid var(--gold)}
+header{background:linear-gradient(180deg,#1b3344 0%,#1e3a4c 100%);color:#fff;padding:28px 40px 26px;border-bottom:4px solid var(--gold);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
 .k{color:var(--gold);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-h1{margin:8px 0 6px;font-size:34px;font-weight:700;letter-spacing:.01em}
+h1{margin:8px 0 6px;font-size:34px;font-weight:700}
 header p{margin:0;color:#d8d0c4;font-size:15px}
+.nav a{color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.3);padding:8px 14px;border-radius:10px;font-size:14px}
+.nav a:hover{background:rgba(255,255,255,.1)}
 .wrap{max-width:1220px;margin:0 auto;padding:22px 28px 56px}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 18px}
 .seg,.months{display:flex;gap:8px;flex-wrap:wrap}
@@ -59,9 +57,12 @@ header p{margin:0;color:#d8d0c4;font-size:15px}
 </head>
 <body>
 <header>
-  <div class="k">Caritas St. Joseph Secondary School</div>
-  <h1>出席率及準時率</h1>
-  <p>教務簡報　·　卡片式總覽　·　可比較各月</p>
+  <div>
+    <div class="k">Caritas St. Joseph Secondary School</div>
+    <h1>出席率及準時率</h1>
+    <p>教務簡報　·　卡片式總覽　·　可比較各月</p>
+  </div>
+  <div class="nav"><a href="https://htmlpreview.github.io/?https://github.com/bernkastelhtc2/attendance-compare/blob/main/teachers.html">個別紀錄查詢 →</a></div>
 </header>
 <div class="wrap">
   <div class="toolbar">
