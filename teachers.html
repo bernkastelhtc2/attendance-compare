@@ -88,8 +88,11 @@ function init(){
 const cache={};
 async function getClass(cls){
   if(!cache[cls]){
-    const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/cls/"+cls+".json");
-    cache[cls]=await r.json();
+    try{
+      const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/cls/"+cls+".json");
+      if(!r.ok) throw new Error("missing");
+      cache[cls]=await r.json();
+    }catch(e){ cache[cls]={roster:[], records:[]}; }
   }
   return cache[cls];
 }
@@ -110,7 +113,7 @@ async function renderList(){
       <div class="n">${s.no}. ${s.cn||s.en}</div>
       <div class="m">${s.en}　缺席 ${abs}　遲到 ${late}</div>
     </div>`;
-  }).join("");
+  }).join("") || "<div class=\"note\">此班資料暫未上傳</div>";
   document.querySelectorAll(".stu").forEach(el=>el.onclick=()=>show(cls, Number(el.dataset.no)));
   document.getElementById("detail").classList.add("hidden");
 }
