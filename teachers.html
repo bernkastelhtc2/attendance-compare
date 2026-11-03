@@ -1,1 +1,132 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>個別紀錄查詢 · 明愛聖若瑟中學</title>
+<style>
+:root{--ink:#1a2332;--muted:#6b7280;--line:#e6e2d8;--bg:#f6f3ee;--navy:#1e3a4c;--gold:#b08958;--teal:#2c6e63;--rose:#9b3d45}
+*{box-sizing:border-box}
+body{margin:0;font-family:"PingFang HK","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(180deg,#1b3344,#1e3a4c);color:#fff;padding:22px 32px;border-bottom:4px solid var(--gold)}
+.k{color:var(--gold);font-size:12px;letter-spacing:.16em}
+h1{margin:6px 0 2px;font-size:28px}
+header p{margin:0;color:#d8d0c4;font-size:14px}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 22px 48px}
+.lock{max-width:420px;margin:48px auto;background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 8px 24px rgba(30,58,76,.06)}
+.lock h2{margin:0 0 8px;color:var(--navy)}
+.lock p{margin:0 0 16px;color:var(--muted);font-size:14px}
+input,select,button{font-family:inherit}
+.lock input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:16px}
+.lock button,.bar button{background:var(--navy);color:#fff;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;font-size:15px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.bar select,.bar input{padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.stu{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;box-shadow:0 3px 10px rgba(30,58,76,.04)}
+.stu.warn{border-color:#ead3d0;background:#fffaf9}
+.stu .n{font-weight:700;color:var(--navy)}
+.stu .m{font-size:12px;color:var(--muted);margin-top:3px}
+.detail{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{background:var(--navy);color:#fff}
+.tag{display:inline-block;padding:2px 7px;border-radius:999px;font-size:12px;font-weight:700}
+.tag.late{background:#fff4e6;color:#b06a12}
+.tag.abs{background:#fdecee;color:var(--rose)}
+.tag.other{background:#eef3f8;color:#3d5166}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="k">CARITAS ST. JOSEPH SECONDARY SCHOOL</div>
+  <h1>個別紀錄查詢</h1>
+  <p>教師專用　·　按班別搜尋學生　·　十月例外紀錄</p>
+</header>
+<div class="wrap">
+  <div class="lock" id="lock">
+    <h2>請輸入密碼</h2>
+    <p>此頁只供教職員查閱個別學生紀錄。</p>
+    <input id="pw" type="password" placeholder="密碼" autofocus/>
+    <div style="height:12px"></div>
+    <button id="enter">進入</button>
+    <p id="err" style="color:var(--rose);margin-top:10px;display:none">密碼不正確</p>
+  </div>
+  <div id="app" class="hidden">
+    <div class="bar">
+      <select id="cls"></select>
+      <input id="q" placeholder="搜尋姓名或學號" style="min-width:200px"/>
+      <button id="out">登出</button>
+    </div>
+    <div class="grid" id="list"></div>
+    <div class="detail hidden" id="detail"></div>
+  </div>
+</div>
+<script>
+let DATA=null;
+const KEY="CSJ2026";
+const lock=document.getElementById("lock");
+const app=document.getElementById("app");
+function unlock(){
+  if(document.getElementById("pw").value!==KEY){document.getElementById("err").style.display="block";return;}
+  sessionStorage.setItem("csj_ok","1");
+  lock.classList.add("hidden"); app.classList.remove("hidden"); load();
+}
+document.getElementById("enter").onclick=unlock;
+document.getElementById("pw").onkeydown=e=>{if(e.key==="Enter")unlock();};
+document.getElementById("out").onclick=()=>{sessionStorage.removeItem("csj_ok");location.reload();};
+if(sessionStorage.getItem("csj_ok")==="1"){lock.classList.add("hidden");app.classList.remove("hidden");load();}
+
+async function load(){
+  if(!DATA){
+    const r=await fetch("https://raw.githubusercontent.com/bernkastelhtc2/attendance-compare/main/teacher-data.json");
+    DATA=await r.json();
+  }
+  init();
+}
+function init(){
+  const classes=[...new Set(DATA.roster.map(s=>s.cls))];
+  const sel=document.getElementById("cls");
+  sel.innerHTML=classes.map(c=>`<option>${c}</option>`).join("");
+  sel.onchange=renderList;
+  document.getElementById("q").oninput=renderList;
+  renderList();
+}
+function renderList(){
+  const cls=document.getElementById("cls").value;
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const students=DATA.roster.filter(s=>s.cls===cls).sort((a,b)=>a.no-b.no);
+  const filtered=students.filter(s=>{
+    const name=(s.cn+" "+s.en+" "+s.no).toLowerCase();
+    return !q || name.includes(q);
+  });
+  document.getElementById("list").innerHTML=filtered.map(s=>{
+    const recs=DATA.records.filter(r=>r.cls===s.cls && Number(r.no)===s.no);
+    const abs=recs.filter(r=>r.type.includes("缺席")).length;
+    const late=recs.filter(r=>r.type.includes("遲到")).length;
+    return `<div class="stu ${recs.length?"warn":""}" data-no="${s.no}">
+      <div class="n">${s.no}. ${s.cn||s.en}</div>
+      <div class="m">${s.en}　缺席 ${abs}　遲到 ${late}</div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".stu").forEach(el=>el.onclick=()=>show(cls, Number(el.dataset.no)));
+  document.getElementById("detail").classList.add("hidden");
+}
+function show(cls,no){
+  const s=DATA.roster.find(x=>x.cls===cls && x.no===no);
+  const recs=DATA.records.filter(r=>r.cls===cls && Number(r.no)===no).sort((a,b)=>a.date.localeCompare(b.date));
+  const tag=t=>t.includes("缺席")?"abs":t.includes("遲到")?"late":"other";
+  let rows=recs.length?recs.map(r=>`<tr>
+    <td>${r.date}</td><td>${r.session}</td>
+    <td><span class="tag ${tag(r.type)}">${r.type}${r.severe==="是"?" · 嚴重":""}</span></td>
+    <td>${r.time||"—"}</td><td>${r.reason||"—"}</td><td>${r.note||"—"}</td><td>${r.exempt}</td>
+  </tr>`).join(""):`<tr><td colspan="7">本月沒有例外紀錄</td></tr>`;
+  document.getElementById("detail").classList.remove("hidden");
+  document.getElementById("detail").innerHTML=`<h3 style="margin:0 0 8px;color:var(--navy)">${cls} ${s.no}. ${s.cn||s.en}</h3>
+    <div style="color:var(--muted);font-size:13px;margin-bottom:10px">${s.en}　共 ${recs.length} 項例外</div>
+    <table><thead><tr><th>日期</th><th>時段</th><th>類別</th><th>時間</th><th>原因</th><th>備註</th><th>豁免</th></tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"start"});
+}
+</script>
+</body>
+</html>
