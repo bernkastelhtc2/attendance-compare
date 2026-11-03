@@ -6,58 +6,62 @@
 <title>出席率及準時率 · 明愛聖若瑟中學</title>
 <style>
 :root{
-  --ink:#14202b; --muted:#5e6a75; --line:#e3e8ee;
-  --bg:#eef2f6; --card:#ffffff;
-  --navy:#16324f; --teal:#1f7a6b; --rose:#b23a48; --amber:#c47a1a;
+  --ink:#1a2332; --muted:#6b7280; --line:#e6e2d8;
+  --bg:#f6f3ee; --card:#ffffff;
+  --navy:#1e3a4c; --gold:#b08958; --teal:#2c6e63; --rose:#9b3d45;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:"PingFang HK","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
-header{background:var(--navy);color:#fff;padding:26px 36px 22px}
-.k{color:#f0c36a;font-size:13px;letter-spacing:.14em}
-h1{margin:6px 0 4px;font-size:32px}
-header p{margin:0;color:#d5dee8;font-size:15px}
-.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 48px}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 16px}
+body{margin:0;font-family:"PingFang HK","Noto Sans CJK TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(180deg,#1b3344 0%,#1e3a4c 100%);color:#fff;padding:28px 40px 26px;border-bottom:4px solid var(--gold)}
+.k{color:var(--gold);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+h1{margin:8px 0 6px;font-size:34px;font-weight:700;letter-spacing:.01em}
+header p{margin:0;color:#d8d0c4;font-size:15px}
+.wrap{max-width:1220px;margin:0 auto;padding:22px 28px 56px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:2px 0 18px}
 .seg,.months{display:flex;gap:8px;flex-wrap:wrap}
-.seg{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.seg{background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:0 1px 2px rgba(30,58,76,.04)}
 .seg button,.months button{border:0;background:#fff;padding:10px 16px;cursor:pointer;font-size:15px;color:var(--navy);font-family:inherit}
-.months button{border:1px solid var(--line);border-radius:12px}
+.months button{border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(30,58,76,.04)}
 .seg button.active,.months button.active{background:var(--navy);color:#fff}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-.kpi{background:#fff;border-radius:16px;padding:16px 18px;border:1px solid var(--line)}
-.kpi .label{font-size:14px;color:var(--muted);font-weight:600}
-.kpi .value{font-size:36px;font-weight:750;color:var(--navy);margin:4px 0 2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border-radius:18px;padding:18px 18px 16px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(30,58,76,.05);position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--navy)}
+.kpi:nth-child(2):before{background:var(--teal)}
+.kpi:nth-child(3):before{background:var(--gold)}
+.kpi:nth-child(4):before{background:var(--rose)}
+.kpi .label{font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.kpi .value{font-size:38px;font-weight:700;color:var(--navy);margin:6px 0 2px;letter-spacing:-.02em}
 .kpi .sub{font-size:13px;color:var(--muted)}
-.delta{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;padding:3px 8px;border-radius:999px}
-.delta.up{color:var(--teal);background:#e7f6f2}
-.delta.down{color:var(--rose);background:#fdecee}
-.delta.flat{color:var(--muted);background:#eef3f8}
-.section{margin:8px 0 18px}
-.section h2{margin:0 0 10px;font-size:18px;color:var(--navy)}
-.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.delta{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;padding:4px 9px;border-radius:999px}
+.delta.up{color:var(--teal);background:#e8f4f1}
+.delta.down{color:var(--rose);background:#fbecee}
+.delta.flat{color:var(--muted);background:#f3f1ec}
+.section{margin:6px 0 20px}
+.section h2{margin:0 0 12px;font-size:16px;color:var(--navy);letter-spacing:.08em;font-weight:700}
+.grid{display:grid;gap:12px}
 .grid.forms{grid-template-columns:repeat(6,1fr)}
-.grid.classes{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;min-height:132px}
-.card.warn{border-color:#f0c4c8;background:#fff8f8}
+.grid.classes{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;box-shadow:0 4px 14px rgba(30,58,76,.04);min-height:148px}
+.card.warn{border-color:#ead3d0;background:#fffaf9}
 .card .name{font-size:18px;font-weight:700;color:var(--navy)}
 .card .meta{font-size:12px;color:var(--muted);margin-top:2px}
-.metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px}
-.metric span{font-size:13px;color:var(--muted)}
-.metric b{font-size:20px;color:var(--ink)}
+.metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}
+.metric span{font-size:12px;color:var(--muted)}
+.metric b{font-size:18px;color:var(--ink);font-weight:700}
 .metric b.bad{color:var(--rose)}
-.bar{height:6px;background:#e8eef4;border-radius:99px;margin-top:4px;overflow:hidden}
+.bar{height:5px;background:#efeae2;border-radius:99px;margin-top:5px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--navy);border-radius:99px}
-.bar.on i{background:#e0a14a}
-.note{font-size:13px;color:var(--muted);margin-top:8px}
+.bar.on i{background:var(--gold)}
+.note{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5}
 @media(max-width:1100px){.kpis,.grid.forms{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.kpis,.grid.forms{grid-template-columns:1fr 1fr}header,.wrap{padding-left:14px;padding-right:14px}}
+@media(max-width:700px){.kpis,.grid.forms{grid-template-columns:1fr 1fr}header,.wrap{padding-left:16px;padding-right:16px}h1{font-size:28px}}
 </style>
 </head>
 <body>
 <header>
-  <div class="k">明愛聖若瑟中學 · 教務簡報</div>
+  <div class="k">Caritas St. Joseph Secondary School</div>
   <h1>出席率及準時率</h1>
-  <p>卡片式總覽。比較模式會在每張卡顯示差額。</p>
+  <p>教務簡報　·　卡片式總覽　·　可比較各月</p>
 </header>
 <div class="wrap">
   <div class="toolbar">
@@ -141,7 +145,7 @@ function renderClasses(){
     return card(cls, a.n+" 人", a.att, a.on, a.late, a.severe, a.att<92||a.on<98, a.att-b.att, a.on-b.on);
   }).join("");
   document.getElementById("note").textContent=mode==="compare"
-    ?`正在比較 ${DATA[monthA].label} 與 ${DATA[monthB].label}。差額 = 前者 − 後者。出席率低於 92% 或準時率低於 98% 的卡片已標紅。`
+    ?`正在比較 ${DATA[monthA].label} 與 ${DATA[monthB].label}。差額 = 前者 − 後者。出席率低於 92% 或準時率低於 98% 的卡片已標出。`
     :"出席率 = 出席 ÷ 應到。準時率 = 已出席學生中準時到達的比例。嚴重遲到已包含在遲到之內。";
 }
 function render(){renderMonths(); renderKpis(); renderForms(); renderClasses()}
